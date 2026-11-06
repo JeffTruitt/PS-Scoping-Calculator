@@ -47,6 +47,17 @@
   .inf { color:var(--warn); font-size:11px; }
   .sum { font-size:13px; color:var(--muted); margin-bottom:14px; }
   code { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:12px; }
+  .ver { font-size:12px; color:var(--muted); margin:-8px 0 16px; }
+  .ver a { color:var(--accent); }
+  #changelog { margin-top:28px; }
+  #changelog summary { cursor:pointer; font-size:13px; text-transform:uppercase;
+                       letter-spacing:.05em; color:var(--muted); font-weight:600; }
+  #changelog .entry { border-top:1px solid var(--line); padding:12px 0 4px; margin-top:12px; }
+  #changelog .entry h3 { font-size:14px; margin:0 0 4px; display:flex; gap:8px;
+                         flex-wrap:wrap; align-items:baseline; }
+  #changelog .meta { color:var(--muted); font-size:12px; margin-bottom:6px; }
+  #changelog ul { margin:4px 0 8px 18px; padding:0; font-size:13px; }
+  #changelog .why { font-size:13px; color:var(--muted); margin:0 0 8px; }
 </style>
 </head>
 <body>
@@ -54,6 +65,7 @@
 <div class="sub">
   Pick the dashboards a client is buying to get the import fields they need, per data file.
 </div>
+<div class="ver" id="verline"></div>
 
 <div class="banner">
   <strong>Minimum known set, not a complete checklist.</strong>
@@ -222,6 +234,73 @@ document.getElementById("copy").onclick = async () => {
 };
 list.addEventListener("change", render);
 render();
+</script>
+<script>
+/* ---------------------------------------------------------------------------
+   Change control log (shown on the page under "Change log").
+   Add a new entry at the TOP of CHANGELOG for every change, bump APP_VERSION,
+   and keep CHANGELOG.md in the repo in step. Full detail lives in CHANGELOG.md.
+   Fields: id, version, date (YYYY-MM-DD), title, type, author, changes[], why.
+   --------------------------------------------------------------------------- */
+const APP_VERSION = "1.1.0";
+const CHANGELOG = [
+  {
+    id: "CC-0002", version: "1.1.0", date: "2026-11-06",
+    title: "Change log shown in the app", type: "Feature", author: "Jeff Truitt",
+    changes: [
+      "Added a version line under the page subtitle.",
+      "Added a collapsible Change log section at the bottom of the page.",
+      "No change to the data, the calculations, or the CSV output."
+    ],
+    why: "Let users see what changed from version to version without comparing files."
+  },
+  {
+    id: "CC-0001", version: "1.0.0", date: "2026-11-06",
+    title: "Baseline", type: "Baseline", author: "Jeff Truitt",
+    changes: [
+      "App placed under version control.",
+      "Data snapshot: configuration read from QA on 2026-10-16; 22 dashboards, 143 rows; 51 platform-derived columns with no traceable import field; 0 tabs not attributed to a dashboard."
+    ],
+    why: "Keep the source in a repository and start tracking changes."
+  }
+];
+
+(function () {
+  const el = (tag, cls, text) => {
+    const n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text != null) n.textContent = text;
+    return n;
+  };
+  const latest = CHANGELOG[0];
+  const verline = document.getElementById("verline");
+  verline.appendChild(document.createTextNode("Version " + APP_VERSION + " · updated " + latest.date + " · "));
+  const link = el("a", null, "Change log");
+  link.href = "#changelog";
+  verline.appendChild(link);
+
+  const box = el("details", "panel");
+  box.id = "changelog";
+  box.appendChild(el("summary", null, "Change log (" + CHANGELOG.length + ")"));
+  CHANGELOG.forEach(c => {
+    const e = el("div", "entry");
+    const h = el("h3", null, "v" + c.version + " — " + c.title);
+    h.appendChild(el("span", "pill", c.type));
+    e.appendChild(h);
+    e.appendChild(el("div", "meta", c.id + " · " + c.date + " · " + c.author));
+    const ul = el("ul");
+    c.changes.forEach(t => ul.appendChild(el("li", null, t)));
+    e.appendChild(ul);
+    if (c.why) e.appendChild(el("p", "why", "Why: " + c.why));
+    box.appendChild(e);
+  });
+  document.body.appendChild(box);
+
+  const openLog = () => { if (location.hash === "#changelog") box.open = true; };
+  window.addEventListener("hashchange", openLog);
+  link.addEventListener("click", () => { box.open = true; });
+  openLog();
+})();
 </script>
 </body>
 </html>

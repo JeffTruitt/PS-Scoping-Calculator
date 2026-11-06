@@ -9,7 +9,7 @@ This is a **minimum known set, not a complete checklist.** Platform-derived colu
 | File | Purpose |
 |---|---|
 | `scoping-calculator.html` | The app. Markup, styles, script and the embedded `DATA` object all live in this one file. |
-| `CHANGELOG.md` | Change control log. Every change to the app or its data gets an entry. |
+| `CHANGELOG.md` | Change control log. Every change to the app or its data gets an entry. The same entries are shown in the app under "Change log". |
 
 ## How the file is organized
 
@@ -17,13 +17,14 @@ This is a **minimum known set, not a complete checklist.** Platform-derived colu
 - Banner and layout markup: shows the config source environment, the read date and the excluded-item counts.
 - `const DATA = {...}` (one very long line): generated data with `meta`, `dashboards`, `rows`, `unresolved` and `scopeUndetermined`.
 - Script (below `DATA`): rendering, selection logic, CSV export and copy.
+- Last `<script>` block: `APP_VERSION` and the `CHANGELOG` list shown in the app.
 
 Because `DATA` is a single line, a line-based diff of a data refresh shows one changed line. The change log is how you see *what* changed in it. Record the counts and the config source for every refresh.
 
 ## Change control
 
 1. Make the change on a branch (`change/<short-name>`), not on `main`.
-2. Add an entry to the top of the `CHANGELOG.md` entry list, using the template in that file. Bump the version.
+2. Add an entry to the top of the `CHANGELOG.md` entry list, using the template in that file. Add the same entry to the top of the `CHANGELOG` list in the last `<script>` block of `scoping-calculator.html` and bump `APP_VERSION` there. That block is what users see on the page.
 3. Commit the HTML and the changelog together, with the change ID in the commit message, for example `CC-0002: refresh data from QA`.
 4. Merge to `main` and tag the release: `git tag v1.1.0`.
 

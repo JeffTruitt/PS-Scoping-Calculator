@@ -10,9 +10,30 @@ Update this table whenever the embedded `DATA` object is regenerated.
 
 | Version | Config source | Config read (UTC) | Data generated (UTC) | Generator | Dashboards | Rows | Platform-derived columns with no import field | Tabs not attributed to a dashboard |
 |---|---|---|---|---|---|---|---|---|
-| 1.0.0 | QA | 2026-10-16 12:58 | 2026-10-19 17:01 | 1.0.0 | 22 | 143 | 51 | 0 |
+| 1.0.0 – 1.1.0 | QA | 2026-10-16 12:58 | 2026-10-19 17:01 | 1.0.0 | 22 | 143 | 51 | 0 |
 
 ## Entries
+
+### CC-0002 — v1.1.0 — 2026-11-06 — Change log shown in the app
+
+| Field | Value |
+|---|---|
+| Type | Feature |
+| Author | Jeff Truitt |
+| Requested by | Jeff Truitt |
+| Approved by | — |
+| Files changed | `scoping-calculator.html`, `README.md`, `CHANGELOG.md` |
+| Sections affected | Styles (new `.ver` and `#changelog` rules), Layout (new `#verline` line), new script block at the end of the file (`APP_VERSION`, `CHANGELOG`) |
+| Data impact | None. `DATA` is unchanged, so the snapshot table has no new row. |
+| Rollback | `git revert <commit>` or `git checkout v1.0.0 -- scoping-calculator.html` |
+
+**What changed:** Added a version line under the page subtitle and a collapsible Change log section at the bottom of the page. Both are built from the `CHANGELOG` list in a small script block at the end of the HTML file.
+
+**Why:** Let users see what changed from version to version without comparing files.
+
+**How it was checked:** Loaded the page in a browser. The version line and 2 log entries show, the link opens the section, selecting all dashboards still renders the results, and there are no console errors.
+
+---
 
 ### CC-0001 — v1.0.0 — 2026-11-06 — Baseline
 
